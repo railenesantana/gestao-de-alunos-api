@@ -1,0 +1,45 @@
+name: Executar Testes Automatizados
+
+on:
+  push:
+    branches: [ main, master ]
+  pull_request:
+    branches: [ main, master ]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [18.x, 20.x]
+
+    steps:
+      - name: Baixar código do repositório
+        uses: actions/checkout@v4
+
+      - name: Configurar Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: 'npm'
+
+      - name: Instalar dependências
+        run: npm ci
+
+      - name: Iniciar servidor da API em segundo plano
+        run: npm start &
+        env:
+          PORT: 3000
+          ADMIN_EMAIL: admin@email.com
+          ADMIN_PASSWORD: admin123
+
+      - name: Aguardar inicialização do servidor
+        run: npx wait-on http://localhost:3000/api-docs || sleep 5
+
+      - name: Executar suíte de testes
+        run: npm test
+        env:
+          BASE_URL: http://localhost:3000
+          ADMIN_EMAIL: admin@email.com
+          ADMIN_PASSWORD: admin123

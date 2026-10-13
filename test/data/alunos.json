@@ -1,0 +1,13 @@
+{
+  "novoAluno": {
+    "nome": "Aluno Teste DDT",
+    "email": "alunoddt@email.com",
+    "senha": "senhaSegura123",
+    "matricula": "2026999"
+  },
+  "trabalho": {
+    "disciplinaId": "disciplina-matematica",
+    "titulo": "Entrega de Testes Automatizados",
+    "descricao": "Trabalho prático de automação com SuperTest"
+  }
+}
